@@ -21,7 +21,7 @@ spring:
     time-zone: GMT+8
   web:
     resources:
-      static-locations: file:D:\\document\\Vue\\code\\ck-file # E:\\ck-file 文件下的文件可直接通过项目服务地址直接访问
+      static-locations: file:D:\\document\\Vue\\code\\ich-file # E:\\ck-file 文件下的文件可直接通过项目服务地址直接访问
   servlet:
     multipart:
       enabled: true
