@@ -1,28 +1,44 @@
 package com.ich.note.service.impl;
 
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONUtil;
 import com.ich.note.dao.IUserDao;
 import com.ich.note.dao.IUserLogDao;
 import com.ich.note.exception.ServiceException;
+import com.ich.note.exception.ServiceRollbackException;
 import com.ich.note.pojo.User;
+import com.ich.note.pojo.UserLog;
 import com.ich.note.service.IUserService;
 import com.ich.note.util.EventCode;
+import com.mybatisflex.annotation.Table;
 import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.ich.note.pojo.table.Tables.USER;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @className: UserServiceImpl
  * @Description: 用户业务的实现层
  * @Author: ich
  */
+@Service
+@Transactional(rollbackFor = {ServiceRollbackException.class})
 public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserDao userDao; // 用户的数据库接口
     @Autowired
     private IUserLogDao userLogDao; // 用户日志的数据库接口
+    @Autowired
+    private StringRedisTemplate redisTemplate; // redis 对象
 
     /**
      * 登录（邮箱号）
@@ -51,6 +67,45 @@ public class UserServiceImpl implements IUserService {
 
         if (user.getStatus() == 0) throw new ServiceException("账号被锁定", EventCode.ACCOUNT_CLOCK);
 
-        return null;
+//        新增用户日志（登录）
+        UserLog log =UserLog.builder()
+                .event(EventCode.LOGIN_EMAIL_PASSWORD_SUCCESS)
+                .desc("邮箱密码登录")
+                .time(new Date())
+                .userId(user.getId())
+                .build();
+
+        int count = 0;
+        try {
+            count = userLogDao.insert(log);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException("登录服务错误", EventCode.LOGIN_LOG_CREATE_EXCEPTION);
+        }
+
+        if (count != 1) throw new ServiceException("登录服务错误", EventCode.LOGIN_LOG_CREATE_FAIL);
+
+//        将登录的信息存储在 redis 中，14天，并将查询登录用户的关机那次返回给客户端
+//        生成唯一的 key 值
+        String userTokenKey = "userToken" + IdUtil.randomUUID();
+
+        try {
+            redisTemplate.opsForValue().set(
+                    userTokenKey,
+                    JSONUtil.toJsonStr(user),
+                    14,
+                    TimeUnit.DAYS
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException("登录服务错误", EventCode.LOGIN_SAVE_USER_TOKEN_REDIS_EXCEPTION);
+        }
+
+//        将登录的用户信息和查询 redis 用户信息的关键词返回出去
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", user);
+        map.put("userToken", userTokenKey);
+
+        return map;
     }
 }
