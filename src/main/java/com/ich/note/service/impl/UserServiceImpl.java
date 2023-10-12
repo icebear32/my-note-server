@@ -40,6 +40,27 @@ public class UserServiceImpl implements IUserService {
     private StringRedisTemplate redisTemplate; // redis 对象
 
     /**
+     * 获取邮箱是否被注册
+     * @param email 邮箱号
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public void getEmailAccountIsExist(String email) throws ServiceException {
+        QueryWrapper wrapper = QueryWrapper.create()
+                .where(USER.EMAIL.eq(email));
+
+        long count = 0;
+        try {
+            count = userDao.selectCountByQuery(wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("查询服务异常", EventCode.SELECT_EXCEPTION);
+        }
+
+        if (count != 0) throw new ServiceException("该邮箱账号已被注册", EventCode.ACCOUNT_EMAIL_REGISTERED);
+    }
+
+    /**
      * 登录（邮箱号）
      * @param email 邮箱号
      * @param password 密码
