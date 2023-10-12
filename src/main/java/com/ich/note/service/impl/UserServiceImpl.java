@@ -10,7 +10,6 @@ import com.ich.note.pojo.User;
 import com.ich.note.pojo.UserLog;
 import com.ich.note.service.IUserService;
 import com.ich.note.util.EventCode;
-import com.mybatisflex.annotation.Table;
 import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -80,14 +79,14 @@ public class UserServiceImpl implements IUserService {
             count = userLogDao.insert(log);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceRollbackException("登录服务错误", EventCode.LOGIN_LOG_CREATE_EXCEPTION);
+            throw new ServiceException("登录服务错误", EventCode.LOGIN_LOG_CREATE_EXCEPTION);
         }
 
-        if (count != 1) throw new ServiceException("登录服务错误", EventCode.LOGIN_LOG_CREATE_FAIL);
+        if (count != 1) throw new ServiceRollbackException("登录服务错误", EventCode.LOGIN_LOG_CREATE_FAIL);
 
-//        将登录的信息存储在 redis 中，14天，并将查询登录用户的关机那次返回给客户端
+//        将登录的信息存储在 redis 中，14天，并将查询登录用户的关键词返回给客户端
 //        生成唯一的 key 值
-        String userTokenKey = "userToken" + IdUtil.randomUUID();
+        String userTokenKey = "userToken:" + IdUtil.randomUUID();
 
         try {
             redisTemplate.opsForValue().set(

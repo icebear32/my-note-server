@@ -8,7 +8,7 @@ package com.ich.note.util;
 public class EventCode {
 
 //    ===== 登录状态码 =====
-    public static  final String LOGIN_EMAIL_PASSWORD_SUCCESS = "L_001"; // 登录成功（邮箱和密码   ）
+    public static  final String LOGIN_EMAIL_PASSWORD_SUCCESS = "L_001"; // 登录成功（邮箱和密码）
     public static  final String LOGIN_FAIL = "L_002"; // 登录失败
     public static  final String LOGIN_LOG_CREATE_EXCEPTION = "L_003"; // 登录日志创建异常
     public static  final String LOGIN_LOG_CREATE_FAIL = "L_004"; // 登录日志创建失败

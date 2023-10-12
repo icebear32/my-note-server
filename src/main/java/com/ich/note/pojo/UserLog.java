@@ -16,7 +16,7 @@ import java.util.Date;
  * @Description: 用户日志类
  * @Author: ich
  */
-@Table(value = "z-user-log")
+@Table(value = "z_user_log")
 @Data
 @Builder
 @AllArgsConstructor

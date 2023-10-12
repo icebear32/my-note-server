@@ -34,7 +34,7 @@ public class UserController {
      * @param password 密码
      * @return 响应数据 { user, userToken }
      */
-    @PostMapping("login/email/password")
+    @PostMapping("/login/email/password")
     public ResponseData loginByEmailAndPassword(String email, String password) {
 //        验证邮箱参数是否为空
         if (Validator.isEmpty(email)) return new ResponseData(false, "邮箱参数有误", EventCode.ACCOUNT_EMAIL_WRONG);
