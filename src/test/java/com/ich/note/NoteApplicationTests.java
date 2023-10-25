@@ -19,8 +19,8 @@ class NoteApplicationTests {
 
     @Test
     void contextLoads() throws ServiceException {
-        String emailRegisterVC =  mailService.getEmailRegisterVC("315105654@qq.com");
-        System.out.println();
+        String emailRegisterVC =  mailService.getEmailRegisterVC("1727693137@qq.com");
+        System.out.println(emailRegisterVC);
     }
 
 }
