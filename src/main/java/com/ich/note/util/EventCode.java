@@ -31,10 +31,18 @@ public class EventCode {
     public static  final String ACCOUNT_EMAIL_REGISTER_LOG_EXCEPTION = "A_006"; // 邮箱账号注册日志异常
     public static  final String ACCOUNT_EMAIL_REGISTER_LOG_ERROR = "A_005"; // 邮箱账号注册日志错误
 
-
 //    ===== 邮箱服务状态码 =====
     public static  final String EMAIL_SEND_VC_SUCCESS = "E_001"; // 邮箱验证码发送成功
     public static  final String EMAIL_SEND_VC_ERROR = "E_002"; // 邮箱验证码发送失败
     public static  final String EMAIL_SEND_VC_SAVE_REDIS_ERROR = "E_003"; // 邮箱验证码存储失败
     public static  final String EMAIL_SEND_INIT_PASSWORD_EXCEPTION = "E_004"; // 邮箱发送账号的初始密码失败
+
+//    ===== 验证码状态码 =====
+    public static final String VC_INVALID = "V_001"; // 验证码已失效
+    public static final String VC_MATCH_ERROR = "V_002"; // 验证码匹配错误
+
+//    ===== 邮箱服务状态码 =====
+    public static  final String PARAM_VC_WRONG = "P_001"; // 验证码参数有误
+    public static  final String PARAM_VC_KEY_WRONG = "P_002"; // 验证码查询的关键词有误
+    public static  final String PARAM_VC_KEY_EMAIL_WRONG = "P_003"; // 邮箱注册账号和获取验证码的邮箱不匹配
 }

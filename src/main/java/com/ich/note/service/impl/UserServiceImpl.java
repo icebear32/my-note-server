@@ -51,7 +51,7 @@ public class UserServiceImpl implements IUserService {
     public void registerAccountByEmail(String email) throws ServiceException {
 //        获取邮箱是否已被注册
         getEmailAccountIsExist(email);
-        
+
 //        新增用户的记录
         Date localTime = new Date(); // 时间
         String password = RandomUtil.randomString(6); // 初始密码
