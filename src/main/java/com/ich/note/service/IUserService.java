@@ -8,6 +8,13 @@ import java.util.Map;
 public interface IUserService {
 
     /**
+     * 根据邮箱注册账号
+     * @param email 邮箱号
+     * @throws ServiceException 业务异常
+     */
+    void registerAccountByEmail(String email) throws ServiceException;
+
+    /**
      * 获取邮箱是否被注册
      * @param email 邮箱号
      * @throws ServiceException 业务异常

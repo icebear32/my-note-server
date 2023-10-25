@@ -1,6 +1,9 @@
 package com.ich.note.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.json.JSONUtil;
 import com.ich.note.dao.IUserDao;
 import com.ich.note.dao.IUserLogDao;
@@ -38,6 +41,66 @@ public class UserServiceImpl implements IUserService {
     private IUserLogDao userLogDao; // 用户日志的数据库接口
     @Autowired
     private StringRedisTemplate redisTemplate; // redis 对象
+
+    /**
+     * 根据邮箱注册账号
+     * @param email 邮箱号
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public void registerAccountByEmail(String email) throws ServiceException {
+//        获取邮箱是否已被注册
+        getEmailAccountIsExist(email);
+        
+//        新增用户的记录
+        Date localTime = new Date(); // 时间
+        String password = RandomUtil.randomString(6); // 初始密码
+
+        User user = User.builder()
+                .email(email)
+                .password(SecureUtil.md5(password)) // 密码随机生成，并且加密
+                .time(localTime)
+                .build();
+
+        int count = 0;
+        try {
+            count = userDao.insert(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("注册失败", EventCode.INSERT_EXCEPTION);
+        }
+
+        if (count != 1) throw new ServiceRollbackException("注册失败", EventCode.INSERT_ERROR);
+
+//        新增一个用户日志（注册）
+        UserLog log = UserLog.builder()
+                .event(EventCode.ACCOUNT_EMAIL_REGISTER_SUCCESS)
+                .desc("邮箱注册账号")
+                .time(localTime)
+                .userId(user.getId())
+                .build();
+
+        try {
+            count = userLogDao.insert(log);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException("注册失败", EventCode.ACCOUNT_EMAIL_REGISTER_LOG_EXCEPTION);
+        }
+
+        if (count != 1) throw new ServiceRollbackException("注册失败", EventCode.ACCOUNT_EMAIL_REGISTER_LOG_ERROR);
+
+//        邮箱通知注册的用户，其初始密码
+        String content = "<p>【ich团队】尊敬的" + email + "：</p>" +
+                "<p>您已成功注册ich笔记账号，其初始密码为：" +  "<b style='font-size: 20px;color: blue;'>" + password + "</b>。</p>" +
+                "<p>请尽量快速登录账号，修改其初始密码！</p>";
+
+        try {
+            MailUtil.send(email,"ich账号注册通知", content,true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException("注册失败", EventCode.EMAIL_SEND_INIT_PASSWORD_EXCEPTION);
+        }
+    }
 
     /**
      * 获取邮箱是否被注册
@@ -88,7 +151,7 @@ public class UserServiceImpl implements IUserService {
         if (user.getStatus() == 0) throw new ServiceException("账号被锁定", EventCode.ACCOUNT_CLOCK);
 
 //        新增用户日志（登录）
-        UserLog log =UserLog.builder()
+        UserLog log = UserLog.builder()
                 .event(EventCode.LOGIN_EMAIL_PASSWORD_SUCCESS)
                 .desc("邮箱密码登录")
                 .time(new Date())
