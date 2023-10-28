@@ -9,9 +9,7 @@ import com.ich.note.util.EventCode;
 import com.ich.note.util.response.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -28,6 +26,28 @@ public class UserController {
     private IUserService userService; // 用户的业务
     @Autowired
     private StringRedisTemplate redisTemplate; // redis 对象
+
+    /**
+     * 退出登录
+     * 请求地址：http://127.0.0.1:18081/ich-notes/user/login/out
+     * 请求方式：GET
+     *
+     * @param userToken 删除 redis 中的关键词
+     * @return 响应数据
+     */
+    @GetMapping("/login/out")
+    public ResponseData signOutLogin(@RequestHeader String userToken) {
+//        判断userToken 是否为空
+        if (Validator.isEmpty(userToken)) return new ResponseData(false, "登录状态有误", EventCode.PARAM_USER_TOKEN_WRONG);
+
+        try {
+            redisTemplate.delete(userToken);
+            return new ResponseData(true, "退出登录成功", EventCode.LOGIN_OUT_SUCCESS);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseData(false, "退出登录失败", EventCode.LOGIN_OUT_EXCEPTION);
+        }
+    }
 
     /**
      * 注册（邮箱）
