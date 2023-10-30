@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackFor = {ServiceRollbackException.class})
-public class IThingServiceImpl implements IThingService {
+public class ThingServiceImpl implements IThingService {
 
     @Autowired
     private IThingDao thingDao; // 小记的数据库接口
@@ -35,11 +35,12 @@ public class IThingServiceImpl implements IThingService {
     @Override
     public List<Thing> getUserNormalThing(int userId) throws ServiceException {
 
-        // WHERE `u_id` = ? AND `status` = 1 ORDER BY `finished`, `top`, `update_time` desc
+        // WHERE `u_id` = ? AND `status` = 1 ORDER BY `finished`, `top` desc, `update_time` desc
         QueryWrapper wrapper = QueryWrapper.create()
+                .select(THING.ID, THING.TITLE, THING.TOP, THING.TAGS, THING.UPDATE_TIME, THING.FINISHED)
                 .where(THING.USER_ID.eq(userId))
                 .and(THING.STATUS.eq(1))
-                .orderBy(THING.FINISHED.asc(), THING.TOP.asc(), THING.UPDATE_TIME.desc());
+                .orderBy(THING.FINISHED.desc(), THING.TOP.asc(), THING.UPDATE_TIME.desc());
 
         try {
             // 根据条件查询用户的小记

@@ -33,7 +33,7 @@ public class Thing {
     private Date time; // 创建时间
     @Column("update_time")
     private Date updateTime; // 最后一次操作的时间
-    private Integer top; // 是否置顶【1：置顶 2：不置顶】
+    private Integer top; // 是否置顶【1：置顶 0：不置顶】
     @Column(onInsertValue = "1")
     private Integer status; // 状态【0：删除 1：正常 -1：彻底删除】
     @Column(onInsertValue = "2")
