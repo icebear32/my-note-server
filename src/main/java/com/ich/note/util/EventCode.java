@@ -24,6 +24,8 @@ public class EventCode {
     public static final String SELECT_NONE = "S_004"; // 未查到信息
     public static final String INSERT_EXCEPTION = "S_005"; // 新增异常
     public static final String INSERT_ERROR = "S_006"; // 新增错误
+    public static final String UPDATE_EXCEPTION = "S_007"; // 修改异常
+    public static final String UPDATE_ERROR = "S_008"; // 修改错误
 
 //    ===== 账号的状态码 =====
     public static final String ACCOUNT_CLOCK = "A_001"; // 账号被锁定
@@ -52,4 +54,10 @@ public class EventCode {
 
 //    ===== redis 服务状态码 =====
     public static final String REDIS_SERVE_ERROR = "R_001"; // redis 服务错误
+
+//    ===== redis 服务状态码 =====
+    public static final String THING_TOP_SUCCESS = "T_001"; // 置顶小记成功
+    public static final String THING_TOP_FAILED = "T_002"; // 置顶小记失败
+    public static final String THING_CANCEL_TOP_SUCCESS = "T_003"; // 置顶小记失败
+    public static final String THING_CANCEL_TOP_FAILED = "T_004"; // 置顶小记失败
 }
