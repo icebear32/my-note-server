@@ -26,6 +26,7 @@ public class EventCode {
     public static final String INSERT_ERROR = "S_006"; // 新增错误
     public static final String UPDATE_EXCEPTION = "S_007"; // 修改异常
     public static final String UPDATE_ERROR = "S_008"; // 修改错误
+    public static final String UPDATE_SUCCESS = "S_009"; // 修改成功
 
 //    ===== 账号的状态码 =====
     public static final String ACCOUNT_CLOCK = "A_001"; // 账号被锁定
@@ -51,6 +52,8 @@ public class EventCode {
     public static final String PARAM_VC_KEY_WRONG = "P_002"; // 验证码查询的关键词有误
     public static final String PARAM_VC_KEY_EMAIL_WRONG = "P_003"; // 邮箱注册账号和获取验证码的邮箱不匹配
     public static final String PARAM_USER_TOKEN_WRONG = "P_004"; // 登录 userToken 有误
+    public static final String PARAM_TOP_WRONG = "P_005"; // 置顶参数有误
+    public static final String PARAM_THING_ID_WRONG = "P_006"; // 小记编号参数有误
 
 //    ===== redis 服务状态码 =====
     public static final String REDIS_SERVE_ERROR = "R_001"; // redis 服务错误
