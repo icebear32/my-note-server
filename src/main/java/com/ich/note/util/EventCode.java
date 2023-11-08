@@ -63,4 +63,6 @@ public class EventCode {
     public static final String THING_TOP_FAILED = "T_002"; // 置顶小记失败
     public static final String THING_CANCEL_TOP_SUCCESS = "T_003"; // 置顶小记失败
     public static final String THING_CANCEL_TOP_FAILED = "T_004"; // 置顶小记失败
+    public static final String THING_DELETE_SUCCESS = "T_005"; // 删除小记成功
+    public static final String THING_COMPLETE_DELETE_SUCCESS = "T_006"; // 彻底删除小记成功
 }

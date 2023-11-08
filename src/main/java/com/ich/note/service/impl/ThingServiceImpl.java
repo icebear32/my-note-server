@@ -32,6 +32,74 @@ public class ThingServiceImpl implements IThingService {
     private INoteThingLogDao noteThingLogDao; // 小记的数据库接口
 
     /**
+     * 根据编号删除小记（彻底删除）
+     *
+     * @param complete 是否彻底删除
+     * @param thingId 小记编号
+     * @param userId 用户编号
+     * @param isRecycleBin 是否是回收站的操作
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public void deleteThingById(boolean complete, int thingId, int userId, boolean isRecycleBin) throws ServiceException {
+//        默认为正常删除操作，并不是彻底删除，也不是回收站中的删除
+        String desc = "删除小记";
+        String event = EventCode.THING_DELETE_SUCCESS;
+        int beforeStatus = 1; // 之前的状态
+        int afterStatus = 0; // 删除之后的状态
+        if (complete) {
+            desc = "彻底删除小记";
+            event = EventCode.THING_COMPLETE_DELETE_SUCCESS;
+            afterStatus = -1;
+            if (isRecycleBin) beforeStatus = 0; // 在回收站中的小记状态都是已删除的
+        }
+
+//        封装修改条件：WHERE `id` = ? AND `u_id` = ? AND `status` = ?(1/0)
+        QueryWrapper wrapper = QueryWrapper.create()
+                .where(THING.ID.eq(thingId))
+                .and(THING.USER_ID.eq(userId))
+                .and(THING.STATUS.eq(beforeStatus));
+
+//        要操作的时间
+        Date localTime = new Date();
+
+//        要修改的哪些字段：status
+        Thing thing = Thing.builder()
+                .status(afterStatus)
+                .updateTime(localTime)
+                .build();
+
+        int count = 0;
+        try {
+//            调用修改语句（数据库接口）
+            count = thingDao.updateByQuery(thing, wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(desc + "失败", EventCode.UPDATE_EXCEPTION);
+        }
+
+        if (count != 1) throw new ServiceRollbackException(desc + "失败", EventCode.UPDATE_ERROR);
+
+//        添加小记的日志（删除）
+        NoteThingLog log = NoteThingLog.builder()
+                .time(localTime)
+                .event(event)
+                .desc(desc)
+                .thingId(thingId)
+                .userId(userId)
+                .build();
+
+        try {
+            count = noteThingLogDao.insert(log);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException(desc + "失败", EventCode.INSERT_EXCEPTION);
+        }
+
+        if (count != 1) throw new ServiceRollbackException(desc + "失败", EventCode.INSERT_ERROR);
+    }
+
+    /**
      * 置顶小记（取消置顶小记）
      * @param isTop 是否置顶小记
      * @param thingId 小记编号

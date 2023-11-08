@@ -9,6 +9,17 @@ import java.util.List;
 public interface IThingService {
 
     /**
+     * 根据编号删除小记（彻底删除）
+     *
+     * @param complete 是否彻底删除
+     * @param thingId 小记编号
+     * @param userId 用户编号
+     * @param isRecycleBin 是否是回收站的操作
+     * @throws ServiceException 业务异常
+     */
+    void deleteThingById(boolean complete, int thingId, int userId, boolean isRecycleBin) throws ServiceException;
+
+    /**
      * 置顶小记（取消置顶小记）
      * @param isTop 是否置顶小记
      * @param thingId 小记编号
