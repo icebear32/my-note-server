@@ -54,6 +54,8 @@ public class EventCode {
     public static final String PARAM_USER_TOKEN_WRONG = "P_004"; // 登录 userToken 有误
     public static final String PARAM_TOP_WRONG = "P_005"; // 置顶参数有误
     public static final String PARAM_THING_ID_WRONG = "P_006"; // 小记编号参数有误
+    public static final String PARAM_DELETE_COMPLETE_WRONG = "P_007"; // 删除参数有误（是否为彻底删除的参数）
+    public static final String PARAM_DELETE_RECYCLE_WRONG = "P_008"; // 删除参数有误（是否为回收站操作的参数）
 
 //    ===== redis 服务状态码 =====
     public static final String REDIS_SERVE_ERROR = "R_001"; // redis 服务错误
