@@ -9,6 +9,14 @@ import java.util.List;
 public interface IThingService {
 
     /**
+     * 新增小记
+     *
+     * @param thing 小记信息（title，tags，content，userId，finished，time，updateTime，top）
+     * @throws ServiceException 业务异常
+     */
+    void newCreateThing(Thing thing) throws ServiceException;
+
+    /**
      * 根据编号删除小记（彻底删除）
      *
      * @param complete 是否彻底删除

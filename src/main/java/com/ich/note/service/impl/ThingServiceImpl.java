@@ -32,6 +32,48 @@ public class ThingServiceImpl implements IThingService {
     private INoteThingLogDao noteThingLogDao; // 小记的数据库接口
 
     /**
+     * 新增小记
+     *
+     * @param thing 小记信息（title，tags，content，userId，finished，time，updateTime，top）
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public void newCreateThing(Thing thing) throws ServiceException {
+//        新增小记
+        int count = 0;
+        try {
+            count = thingDao.insert(thing);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("新增小记失败", EventCode.THING_CREATE_EXCEPTION);
+        }
+
+        if (count != 1) {
+            throw new ServiceRollbackException("新增小记失败", EventCode.THING_CREATE_FAILED);
+        }
+
+//        新增小记的日志
+        NoteThingLog log = NoteThingLog.builder()
+                .time(thing.getUpdateTime())
+                .event(EventCode.THING_CREATE_SUCCESS)
+                .desc("新增小记")
+                .thingId(thing.getId())
+                .userId(thing.getUserId())
+                .build();
+
+        try {
+            count = noteThingLogDao.insert(log);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException("新增小记失败", EventCode.INSERT_EXCEPTION);
+        }
+
+        if (count != 1) {
+            throw new ServiceRollbackException("新增小记失败", EventCode.INSERT_ERROR);
+        }
+    }
+
+    /**
      * 根据编号删除小记（彻底删除）
      *
      * @param complete 是否彻底删除
@@ -166,8 +208,6 @@ public class ThingServiceImpl implements IThingService {
             throw new ServiceRollbackException(desc + "小记异常", EventCode.INSERT_ERROR);
         }
     }
-
-
 
     /**
      * 获取用户正常的小记

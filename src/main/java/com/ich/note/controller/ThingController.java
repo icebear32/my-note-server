@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +30,63 @@ public class ThingController {
     private IThingService thingService; // 用户的业务
     @Autowired
     private StringRedisTemplate redisTemplate; // redis 对象
+
+    /**
+     * 新增小记
+     * 请求地址：http://127.0.0.1:18081/ich-notes/thing/create
+     * 请求方式：POST
+     *
+     * @param title 标题
+     * @param top 是否置顶
+     * @param tags 标签（"六一,礼物,儿童节"）
+     * @param content 待办事项（[{"checked":true,"thing":"气球"},{"checked":true,"thing":"棒棒糖"}]）
+     * @param finished 是否完成
+     * @param userToken redis key，登录用户的信息
+     * @return
+     */
+    @PostMapping("/create")
+    public ResponseData createThing(String title, boolean top, String tags, String content, boolean finished, @RequestHeader String userToken) {
+        try {
+//            判断登陆参数
+            User user = TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            验证标题参数
+            if (Validator.isEmpty(title))
+                return new ResponseData(false, "小记标题参数有误", EventCode.PARAM_THING_TITLE_WRONG);
+//            验证置顶参数
+            if (Validator.isEmpty(top))
+                return new ResponseData(false, "小记置顶参数有误", EventCode.PARAM_THING_TOP_WRONG);
+//            验证标签参数
+            if (Validator.isEmpty(tags))
+                return new ResponseData(false, "小记标签参数有误", EventCode.PARAM_THING_TAGS_WRONG);
+//            验证内容参数
+            if (Validator.isEmpty(content))
+                return new ResponseData(false, "小记内容参数有误", EventCode.PARAM_THING_CONTENT_WRONG);
+//            验证完成参数
+            if (Validator.isEmpty(finished))
+                return new ResponseData(false, "小记完成参数有误", EventCode.PARAM_THING_FINISHED_WRONG );
+
+//            时间
+            Date localTime = new Date();
+
+            Thing thing = Thing.builder()
+                    .updateTime(localTime)
+                    .time(localTime)
+                    .title(title)
+                    .tags(tags)
+                    .content(content)
+                    .userId(user.getId())
+                    .finished(finished ? 1 : 0)
+                    .top(top ? 1 : 0)
+                    .build();
+
+//            调用新增小记业务
+            thingService.newCreateThing(thing);
+            return new ResponseData(true, "新增小记成功", EventCode.THING_CREATE_SUCCESS);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
 
     /**
      * 删除小记（彻底删除小记）
