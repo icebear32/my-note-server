@@ -32,6 +32,31 @@ public class ThingController {
     private StringRedisTemplate redisTemplate; // redis 对象
 
     /**
+     * 获取编辑的小记信息
+     * 请求地址：http://127.0.0.1:18081/ich-notes/thing/edit
+     * 请求方式：GET
+     *
+     * @param thingId 小记编号
+     * @param userToken redis key，登录用户的信息
+     * @return 响应数据，小记对象
+     */
+    @GetMapping("/edit")
+    public ResponseData getUserEditThing(int thingId, @RequestHeader String userToken) {
+        try {
+//            判断登录参数
+            User user = TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            验证小记编号参数
+            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_THING_ID_WRONG);
+//            调用获取编辑小记业务
+            Thing editThing = thingService.getEditThing(thingId, user.getId());
+            return new ResponseData(true, "获取成功", EventCode.SELECT_SUCCESS, editThing);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
+
+    /**
      * 新增小记
      * 请求地址：http://127.0.0.1:18081/ich-notes/thing/create
      * 请求方式：POST
