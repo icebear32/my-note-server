@@ -9,6 +9,13 @@ import java.util.List;
 public interface IThingService {
 
     /**
+     * 修改小记
+     * @param thing 小记信息（title，tags，content，userId，finished，updateTime，top，id）
+     * @throws ServiceException 业务异常
+     */
+    void updateThing(Thing thing) throws ServiceException;
+
+    /**
      * 获取编辑的小记信息
      *
      * @param thingId 小记编号

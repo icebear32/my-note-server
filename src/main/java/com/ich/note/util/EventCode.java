@@ -75,4 +75,5 @@ public class EventCode {
     public static final String THING_CREATE_SUCCESS = "T_007"; // 创建小记成功
     public static final String THING_CREATE_EXCEPTION = "T_008"; // 创建小记异常
     public static final String THING_CREATE_FAILED = "T_009"; // 创建小记失败
+    public static final String THING_UPDATE_SUCCESS = "T_010"; // 修改小记成功
 }

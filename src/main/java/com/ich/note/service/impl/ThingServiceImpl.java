@@ -32,6 +32,61 @@ public class ThingServiceImpl implements IThingService {
     private INoteThingLogDao noteThingLogDao; // 小记的数据库接口
 
     /**
+     * 修改小记
+     * @param thing 小记信息（title，tags，content，userId，finished，updateTime，top，id）
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public void updateThing(Thing thing) throws ServiceException {
+//        修改小记的条件
+        QueryWrapper wrapper = QueryWrapper.create()
+                .where(THING.ID.eq(thing.getId()))
+                .and(THING.USER_ID.eq(thing.getUserId()))
+                .and(THING.STATUS.eq(1));
+
+        Thing updateColumn = Thing.builder()
+                .title(thing.getTitle())
+                .tags(thing.getTags())
+                .content(thing.getContent())
+                .finished(thing.getFinished())
+                .top(thing.getTop())
+                .updateTime(thing.getUpdateTime())
+                .build();
+
+        int count = 0;
+        try {
+            count = thingDao.updateByQuery(updateColumn, wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("修改失败", EventCode.UPDATE_EXCEPTION);
+        }
+
+        if (count != 1) {
+            throw new ServiceRollbackException("修改失败", EventCode.UPDATE_ERROR);
+        }
+
+//        修改小记的日志
+        NoteThingLog log = NoteThingLog.builder()
+                .time(thing.getUpdateTime())
+                .event(EventCode.THING_UPDATE_SUCCESS)
+                .desc("修改小记")
+                .thingId(thing.getId())
+                .userId(thing.getUserId())
+                .build();
+
+        try {
+            count = noteThingLogDao.insert(log);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceRollbackException("修改小记失败", EventCode.INSERT_EXCEPTION);
+        }
+
+        if (count != 1) {
+            throw new ServiceRollbackException("修改小记失败", EventCode.INSERT_ERROR);
+        }
+    }
+
+    /**
      * 获取编辑的小记信息
      *
      * @param thingId 小记编号
