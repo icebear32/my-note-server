@@ -6,6 +6,7 @@ import com.ich.note.exception.ServiceException;
 import com.ich.note.exception.ServiceRollbackException;
 import com.ich.note.pojo.NoteThingLog;
 import com.ich.note.pojo.Thing;
+import com.ich.note.service.INoteThingLogService;
 import com.ich.note.service.IThingService;
 import com.ich.note.util.EventCode;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -29,7 +30,7 @@ public class ThingServiceImpl implements IThingService {
     @Autowired
     private IThingDao thingDao; // 小记的数据库接口
     @Autowired
-    private INoteThingLogDao noteThingLogDao; // 小记的数据库接口
+    private INoteThingLogService noteThingLogService;
 
     /**
      * 修改小记
@@ -74,16 +75,8 @@ public class ThingServiceImpl implements IThingService {
                 .userId(thing.getUserId())
                 .build();
 
-        try {
-            count = noteThingLogDao.insert(log);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceRollbackException("修改小记失败", EventCode.INSERT_EXCEPTION);
-        }
-
-        if (count != 1) {
-            throw new ServiceRollbackException("修改小记失败", EventCode.INSERT_ERROR);
-        }
+//        新增笔记小记日志记录（修改业务）
+        noteThingLogService.addOneLog(log, true);
     }
 
     /**
@@ -150,16 +143,8 @@ public class ThingServiceImpl implements IThingService {
                 .userId(thing.getUserId())
                 .build();
 
-        try {
-            count = noteThingLogDao.insert(log);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceRollbackException("新增小记失败", EventCode.INSERT_EXCEPTION);
-        }
-
-        if (count != 1) {
-            throw new ServiceRollbackException("新增小记失败", EventCode.INSERT_ERROR);
-        }
+//        新增笔记小记日志记录（新增业务）
+        noteThingLogService.addOneLog(log, true);
     }
 
     /**
@@ -220,14 +205,8 @@ public class ThingServiceImpl implements IThingService {
                 .userId(userId)
                 .build();
 
-        try {
-            count = noteThingLogDao.insert(log);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceRollbackException(desc + "失败", EventCode.INSERT_EXCEPTION);
-        }
-
-        if (count != 1) throw new ServiceRollbackException(desc + "失败", EventCode.INSERT_ERROR);
+//        新增笔记小记日志记录（删除业务）
+        noteThingLogService.addOneLog(log, true);
     }
 
     /**
@@ -286,16 +265,8 @@ public class ThingServiceImpl implements IThingService {
                 .userId(userId)
                 .build();
 
-        try {
-            count = noteThingLogDao.insert(log);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceRollbackException(desc + "小记异常", EventCode.INSERT_EXCEPTION);
-        }
-
-        if (count != 1) {
-            throw new ServiceRollbackException(desc + "小记异常", EventCode.INSERT_ERROR);
-        }
+//        新增笔记小记日志记录（置顶业务）
+        noteThingLogService.addOneLog(log, true);
     }
 
     /**

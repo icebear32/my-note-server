@@ -76,4 +76,8 @@ public class EventCode {
     public static final String THING_CREATE_EXCEPTION = "T_008"; // 创建小记异常
     public static final String THING_CREATE_FAILED = "T_009"; // 创建小记失败
     public static final String THING_UPDATE_SUCCESS = "T_010"; // 修改小记成功
+
+//    ===== 日志业务状态码 =====
+    public static final String LOG_CREATE_EXCEPTION = "LOG_001"; // 日志新增异常
+    public static final String LOG_CREATE_ERROR = "LOG_002"; // 日志新增错误
 }
