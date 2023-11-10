@@ -130,7 +130,7 @@ public class ThingController {
      * @param userToken redis key，登录用户的信息
      * @return
      */
-    @PostMapping("/create")
+    @PutMapping("/create")
     public ResponseData createThing(String title, boolean top, String tags, String content, boolean finished, @RequestHeader String userToken) {
         try {
 //            判断登陆参数
