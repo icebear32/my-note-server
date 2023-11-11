@@ -239,17 +239,19 @@ public class ThingController {
      * 请求地址：http://127.0.0.1:18081/ich-notes/thing/list
      * 请求方式：GET
      *
+     * @param search 查询关键词（标题含有，或者，标签含有）
+     * @param filter 过滤【null：默认，0：只查询未完成的，1：只查询已完成的】
      * @param userToken redis key，登录用户的信息
      * @return 响应数据
      */
     @GetMapping("/list")
-    public ResponseData getUserThingList(@RequestHeader String userToken) {
+    public ResponseData getUserThingList(String search, Integer filter, @RequestHeader String userToken) {
 
         try {
 //            判断登录参数
             User user =  TokenValidateUtil.validateUserToken(userToken, redisTemplate);
 //            调用用户的小记列表业务
-            List<Thing> things = thingService.getUserNormalThing(user.getId());
+            List<Thing> things = thingService.getUserNormalThing(search, filter, user.getId());
             return new ResponseData(true, "获取成功", EventCode.SELECT_SUCCESS, things);
         }catch (ServiceException e) {
             e.printStackTrace();

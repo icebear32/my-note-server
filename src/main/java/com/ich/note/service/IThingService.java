@@ -55,9 +55,12 @@ public interface IThingService {
 
     /**
      * 获取用户正常的小记
+     *
+     * @param search 查询关键词（标题含有，或者，标签含有）
+     * @param filter 过滤【null：默认，0：只查询未完成的，1：只查询已完成的】
      * @param userId 用户编号
      * @return 小记对象集合
      * @throws ServiceException 业务异常
      */
-    List<Thing> getUserNormalThing(int userId) throws ServiceException;
+    List<Thing> getUserNormalThing(String search, Integer filter, int userId) throws ServiceException;
 }

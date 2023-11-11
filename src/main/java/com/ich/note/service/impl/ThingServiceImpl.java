@@ -1,6 +1,6 @@
 package com.ich.note.service.impl;
 
-import com.ich.note.dao.INoteThingLogDao;
+import cn.hutool.core.lang.Validator;
 import com.ich.note.dao.IThingDao;
 import com.ich.note.exception.ServiceException;
 import com.ich.note.exception.ServiceRollbackException;
@@ -13,6 +13,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import static com.ich.note.pojo.table.Tables.THING;
 
 import java.util.Date;
@@ -271,19 +272,37 @@ public class ThingServiceImpl implements IThingService {
 
     /**
      * 获取用户正常的小记
+     *
+     * @param search 查询关键词（标题含有，或者，标签含有）
+     * @param filter 过滤【null：默认，0：只查询未完成的，1：只查询已完成的】
      * @param userId 用户编号
      * @return 小记对象集合
      * @throws ServiceException 业务异常
      */
     @Override
-    public List<Thing> getUserNormalThing(int userId) throws ServiceException {
+    public List<Thing> getUserNormalThing(String search, Integer filter, int userId) throws ServiceException {
 
-        // WHERE `u_id` = ? AND `status` = 1 ORDER BY `finished`, `top` desc, `update_time` desc
+        // WHERE `u_id` = ? AND `status` = 1
         QueryWrapper wrapper = QueryWrapper.create()
                 .select(THING.ID, THING.TITLE, THING.TOP, THING.TAGS, THING.UPDATE_TIME, THING.FINISHED)
                 .where(THING.USER_ID.eq(userId))
-                .and(THING.STATUS.eq(1))
-                .orderBy(THING.FINISHED.asc(), THING.TOP.desc(), THING.UPDATE_TIME.desc());
+                .and(THING.STATUS.eq(1));
+
+//        是否有关键词查询 AND (`title` = ? OR `tags` = ?)
+        if (Validator.isNotEmpty(search)) {
+            wrapper.and(
+                    THING.TITLE.like(search)
+                            .or(THING.TAGS.like(search))
+            );
+        }
+
+//        是否有过滤条件（过滤 finished 字段）
+        if (filter != null && (filter == 0 || filter == 1)) {
+            wrapper.and(THING.FINISHED.eq(filter));
+        }
+
+//        排序规则：ORDER BY `finished`, `top` desc, `update_time` desc
+        wrapper.orderBy(THING.FINISHED.asc(), THING.TOP.desc(), THING.UPDATE_TIME.desc());
 
         try {
             // 根据条件查询用户的小记
