@@ -92,7 +92,7 @@ public class ThingServiceImpl implements IThingService {
     public Thing getEditThing(int thingId, int userId) throws ServiceException {
 //        封装查询条件
         QueryWrapper wrapper = QueryWrapper.create()
-                .select(THING.TITLE, THING.TOP, THING.TAGS, THING.CONTENT)
+                .select(THING.TITLE, THING.TOP, THING.TAGS, THING.CONTENT, THING.USER_ID)
                 .where(THING.ID.eq(thingId))
                 .and(THING.USER_ID.eq(userId))
                 .and(THING.STATUS.eq(1));
