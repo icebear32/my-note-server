@@ -29,8 +29,8 @@ spring:
       max-file-size: 1MB # 设置单个文件最大长度
 server:
   port: 18081
-  servlet:
-    context-path: /ich-notes
+#  servlet:
+#    context-path: /ich-notes
 mybatis-flex:
   mapper-locations: mapper/**/*Mapper.xml
   configuration:
