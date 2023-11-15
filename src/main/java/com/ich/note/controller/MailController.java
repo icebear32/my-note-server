@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/mail") // 请求地址：http://127.0.0.1:18081/ich-notes/mail
+@RequestMapping("/mail") // 请求地址：http://127.0.0.1:18081/mail
 public class MailController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class MailController {
 
     /**
      * 获取邮箱注册账号的验证码
-     * 请求地址：http://127.0.0.1:18081/ich-notes/user
+     * 请求地址：http://127.0.0.1:18081s/user
      * 请求方式：GET
      *
      * @param email 邮箱号

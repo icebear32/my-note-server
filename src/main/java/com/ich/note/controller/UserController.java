@@ -19,7 +19,7 @@ import java.util.Map;
  * @Author: ich
  */
 @RestController
-@RequestMapping("/user") // 请求地址：http://127.0.0.1:18081/ich-notes/user
+@RequestMapping("/user") // 请求地址：http://127.0.0.1:18081/user
 public class UserController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class UserController {
 
     /**
      * 退出登录
-     * 请求地址：http://127.0.0.1:18081/ich-notes/user/login/out
+     * 请求地址：http://127.0.0.1:18081s/user/login/out
      * 请求方式：GET
      *
      * @param userToken 删除 redis 中的关键词
@@ -51,7 +51,7 @@ public class UserController {
 
     /**
      * 注册（邮箱）
-     * 请求地址：http://127.0.0.1:18081/ich-notes/user/register/email
+     * 请求地址：http://127.0.0.1:18081s/user/register/email
      * 请求方式：POST
      *
      * @param email 邮箱号
@@ -94,7 +94,7 @@ public class UserController {
 
     /**
      * 登录（邮箱和密码）
-     * 请求地址：http://127.0.0.1:18081/ich-notes/user
+     * 请求地址：http://127.0.0.1:18081s/user
      * 请求方式：POST
      *
      * @param email 邮箱号
