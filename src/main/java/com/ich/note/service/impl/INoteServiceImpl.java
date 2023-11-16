@@ -79,12 +79,12 @@ public class INoteServiceImpl implements INoteService {
 
         Date localTime = new Date(); // 时间
 
-//        新增小记日志记录（置顶业务）
+//        新增笔记日志记录（置顶业务）
         NoteThingLog log = NoteThingLog.builder()
                 .time(localTime)
                 .event(eventSuccess)
                 .desc(desc)
-                .thingId(noteId)
+                .noteId(noteId)
                 .userId(userId)
                 .build();
 
