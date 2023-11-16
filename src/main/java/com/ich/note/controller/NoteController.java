@@ -1,5 +1,6 @@
 package com.ich.note.controller;
 
+import cn.hutool.core.lang.Validator;
 import com.ich.note.exception.ServiceException;
 import com.ich.note.pojo.Note;
 import com.ich.note.pojo.Thing;
@@ -30,6 +31,35 @@ public class NoteController {
     private INoteService noteService; // 笔记的业务接口
     @Autowired
     private StringRedisTemplate redisTemplate; // redis 对象
+
+    /**
+     * 置顶笔记（取消置顶笔记）
+     * 请求地址：http://127.0.0.1:18081s/note/top
+     * 请求方式：GET
+     *
+     * @param isTop 是否为置顶
+     * @param noteId 笔记编号
+     * @param userToken redis key，登录用户的信息
+     * @return
+     */
+    @GetMapping("top")
+    public ResponseData topNote(boolean isTop, int noteId, @RequestHeader String userToken) {
+
+        try {
+//            判断登录参数
+            User user =  TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            验证登录参数
+            if (Validator.isEmpty(isTop)) return new ResponseData(false, "置顶参数有误", EventCode.PARAM_TOP_WRONG);
+//            验证笔记编号参数
+            if (Validator.isEmpty(noteId)) return new ResponseData(false, "笔记编号参数有误", EventCode.PARAM_ID_WRONG);
+//            调用置顶笔记业务
+            noteService.topNote(isTop, noteId, user.getId());
+            return new ResponseData(true, isTop ? "置顶成功" : "取消置顶成功", EventCode.UPDATE_SUCCESS);
+        }catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
 
     /**
      * 获取用户的小记列表

@@ -52,7 +52,7 @@ public class ThingController {
             User user = TokenValidateUtil.validateUserToken(userToken, redisTemplate);
 //            验证编号参数
             if (Validator.isEmpty(thingId))
-                return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_THING_ID_WRONG);
+                return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_ID_WRONG);
 //            验证标题参数
             if (Validator.isEmpty(title))
                 return new ResponseData(false, "小记标题参数有误", EventCode.PARAM_THING_TITLE_WRONG);
@@ -85,7 +85,7 @@ public class ThingController {
 
 //            调用修改小记业务
             thingService.updateThing(thing);
-            return new ResponseData(true, "修改小记成功", EventCode.THING_UPDATE_SUCCESS);
+            return new ResponseData(true, "修改小记成功", EventCode.NT_UPDATE_SUCCESS);
         } catch (ServiceException e) {
             e.printStackTrace();
             return new ResponseData(false, e.getMessage(), e.getCode());
@@ -107,7 +107,7 @@ public class ThingController {
 //            判断登录参数
             User user = TokenValidateUtil.validateUserToken(userToken, redisTemplate);
 //            验证小记编号参数
-            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_THING_ID_WRONG);
+            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_ID_WRONG);
 //            调用获取编辑小记业务
             Thing editThing = thingService.getEditThing(thingId, user.getId());
             return new ResponseData(true, "获取成功", EventCode.SELECT_SUCCESS, editThing);
@@ -167,7 +167,7 @@ public class ThingController {
 
 //            调用新增小记业务
             thingService.newCreateThing(thing);
-            return new ResponseData(true, "新增小记成功", EventCode.THING_CREATE_SUCCESS);
+            return new ResponseData(true, "新增小记成功", EventCode.NT_CREATE_SUCCESS);
         } catch (ServiceException e) {
             e.printStackTrace();
             return new ResponseData(false, e.getMessage(), e.getCode());
@@ -195,7 +195,7 @@ public class ThingController {
 //            验证回收站参数
             if (Validator.isEmpty(isRecycleBin)) return new ResponseData(false, "删除参数有误", EventCode.PARAM_DELETE_RECYCLE_WRONG);
 //            验证小记编号参数
-            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_THING_ID_WRONG);
+            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_ID_WRONG);
 //            调用删除小记业务
             thingService.deleteThingById(complete, thingId, user.getId(), isRecycleBin);
             return new ResponseData(true, complete ? "彻底删除成功" : "删除成功", EventCode.UPDATE_SUCCESS);
@@ -224,7 +224,7 @@ public class ThingController {
 //            验证登录参数
             if (Validator.isEmpty(isTop)) return new ResponseData(false, "置顶参数有误", EventCode.PARAM_TOP_WRONG);
 //            验证小记编号参数
-            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_THING_ID_WRONG);
+            if (Validator.isEmpty(thingId)) return new ResponseData(false, "小记编号参数有误", EventCode.PARAM_ID_WRONG);
 //            调用置顶小记业务
             thingService.topThing(isTop, thingId, user.getId());
             return new ResponseData(true, isTop ? "置顶成功" : "取消置顶成功", EventCode.UPDATE_SUCCESS);

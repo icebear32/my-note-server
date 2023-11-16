@@ -47,13 +47,13 @@ public class EventCode {
     public static final String VC_INVALID = "V_001"; // 验证码已失效
     public static final String VC_MATCH_ERROR = "V_002"; // 验证码匹配错误
 
-//    ===== 邮箱服务状态码 =====
+//    ===== 验证参数的 =====
     public static final String PARAM_VC_WRONG = "P_001"; // 验证码参数有误
     public static final String PARAM_VC_KEY_WRONG = "P_002"; // 验证码查询的关键词有误
     public static final String PARAM_VC_KEY_EMAIL_WRONG = "P_003"; // 邮箱注册账号和获取验证码的邮箱不匹配
     public static final String PARAM_USER_TOKEN_WRONG = "P_004"; // 登录 userToken 有误
     public static final String PARAM_TOP_WRONG = "P_005"; // 置顶参数有误
-    public static final String PARAM_THING_ID_WRONG = "P_006"; // 小记编号参数有误
+    public static final String PARAM_ID_WRONG = "P_006"; // 小记编号参数有误
     public static final String PARAM_DELETE_COMPLETE_WRONG = "P_007"; // 删除参数有误（是否为彻底删除的参数）
     public static final String PARAM_DELETE_RECYCLE_WRONG = "P_008"; // 删除参数有误（是否为回收站操作的参数）
     public static final String PARAM_THING_TITLE_WRONG = "P_009"; // 小记标题参数有误
@@ -65,17 +65,17 @@ public class EventCode {
 //    ===== redis 服务状态码 =====
     public static final String REDIS_SERVE_ERROR = "R_001"; // redis 服务错误
 
-//    ===== redis 服务状态码 =====
-    public static final String THING_TOP_SUCCESS = "T_001"; // 置顶小记成功
-    public static final String THING_TOP_FAILED = "T_002"; // 置顶小记失败
-    public static final String THING_CANCEL_TOP_SUCCESS = "T_003"; // 置顶小记失败
-    public static final String THING_CANCEL_TOP_FAILED = "T_004"; // 置顶小记失败
-    public static final String THING_DELETE_SUCCESS = "T_005"; // 删除小记成功
-    public static final String THING_COMPLETE_DELETE_SUCCESS = "T_006"; // 彻底删除小记成功
-    public static final String THING_CREATE_SUCCESS = "T_007"; // 创建小记成功
-    public static final String THING_CREATE_EXCEPTION = "T_008"; // 创建小记异常
-    public static final String THING_CREATE_FAILED = "T_009"; // 创建小记失败
-    public static final String THING_UPDATE_SUCCESS = "T_010"; // 修改小记成功
+//    ===== 笔记、小记业务状态码 =====
+    public static final String NT_TOP_SUCCESS = "T_001"; // 置顶笔记、小记成功
+    public static final String NT_TOP_FAILED = "T_002"; // 置顶笔记、小记失败
+    public static final String NT_CANCEL_TOP_SUCCESS = "T_003"; // 置顶笔记、小记失败
+    public static final String NT_CANCEL_TOP_FAILED = "T_004"; // 置顶笔记、小记失败
+    public static final String NT_DELETE_SUCCESS = "T_005"; // 删除笔记、小记成功
+    public static final String NT_COMPLETE_DELETE_SUCCESS = "T_006"; // 彻底删除笔记、小记成功
+    public static final String NT_CREATE_SUCCESS = "T_007"; // 创建笔记、小记成功
+    public static final String NT_CREATE_EXCEPTION = "T_008"; // 创建笔记、小记异常
+    public static final String NT_CREATE_FAILED = "T_009"; // 创建笔记、小记失败
+    public static final String NT_UPDATE_SUCCESS = "T_010"; // 修改笔记、小记成功
 
 //    ===== 日志业务状态码 =====
     public static final String LOG_CREATE_EXCEPTION = "LOG_001"; // 日志新增异常

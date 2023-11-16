@@ -70,7 +70,7 @@ public class ThingServiceImpl implements IThingService {
 //        修改小记的日志
         NoteThingLog log = NoteThingLog.builder()
                 .time(thing.getUpdateTime())
-                .event(EventCode.THING_UPDATE_SUCCESS)
+                .event(EventCode.NT_UPDATE_SUCCESS)
                 .desc("修改小记")
                 .thingId(thing.getId())
                 .userId(thing.getUserId())
@@ -128,17 +128,17 @@ public class ThingServiceImpl implements IThingService {
             count = thingDao.insert(thing);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceException("新增小记失败", EventCode.THING_CREATE_EXCEPTION);
+            throw new ServiceException("新增小记失败", EventCode.NT_CREATE_EXCEPTION);
         }
 
         if (count != 1) {
-            throw new ServiceRollbackException("新增小记失败", EventCode.THING_CREATE_FAILED);
+            throw new ServiceRollbackException("新增小记失败", EventCode.NT_CREATE_FAILED);
         }
 
 //        新增小记的日志
         NoteThingLog log = NoteThingLog.builder()
                 .time(thing.getUpdateTime())
-                .event(EventCode.THING_CREATE_SUCCESS)
+                .event(EventCode.NT_CREATE_SUCCESS)
                 .desc("新增小记")
                 .thingId(thing.getId())
                 .userId(thing.getUserId())
@@ -161,12 +161,12 @@ public class ThingServiceImpl implements IThingService {
     public void deleteThingById(boolean complete, int thingId, int userId, boolean isRecycleBin) throws ServiceException {
 //        默认为正常删除操作，并不是彻底删除，也不是回收站中的删除
         String desc = "删除小记";
-        String event = EventCode.THING_DELETE_SUCCESS;
+        String event = EventCode.NT_DELETE_SUCCESS;
         int beforeStatus = 1; // 之前的状态
         int afterStatus = 0; // 删除之后的状态
         if (complete) {
             desc = "彻底删除小记";
-            event = EventCode.THING_COMPLETE_DELETE_SUCCESS;
+            event = EventCode.NT_COMPLETE_DELETE_SUCCESS;
             afterStatus = -1;
             if (isRecycleBin) beforeStatus = 0; // 在回收站中的小记状态都是已删除的
         }
@@ -220,14 +220,14 @@ public class ThingServiceImpl implements IThingService {
     @Override
     public void topThing(boolean isTop, int thingId, int userId) throws ServiceException {
         String desc = "置顶小记"; // 事件描述
-        String eventSuccess = EventCode.THING_TOP_SUCCESS; // 事件代码
-        String eventFailed = EventCode.THING_TOP_FAILED; // 事件代码
+        String eventSuccess = EventCode.NT_TOP_SUCCESS; // 事件代码
+        String eventFailed = EventCode.NT_TOP_FAILED; // 事件代码
         int beforeTop = 0; // 修改之前的 top 字段值
         int afterTop = 1; // 修改之后的 top 字段值
         if (!isTop) {
-            desc = "取消置顶";
-            eventSuccess = EventCode.THING_CANCEL_TOP_SUCCESS;
-            eventFailed = EventCode.THING_CANCEL_TOP_FAILED;
+            desc = "取消置顶小记";
+            eventSuccess = EventCode.NT_CANCEL_TOP_SUCCESS;
+            eventFailed = EventCode.NT_CANCEL_TOP_FAILED;
             beforeTop = 1;
             afterTop = 0;
         }
@@ -248,11 +248,11 @@ public class ThingServiceImpl implements IThingService {
             count = thingDao.updateByQuery(thing, wrapper);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceException(desc + "小记异常", EventCode.UPDATE_EXCEPTION);
+            throw new ServiceException(desc + "服务异常", EventCode.UPDATE_EXCEPTION);
         }
 
         if (count != 1) {
-            throw new ServiceRollbackException(desc + "小记异常", eventFailed);
+            throw new ServiceRollbackException(desc + "服务异常", eventFailed);
         }
 
         Date localTime = new Date(); // 时间
