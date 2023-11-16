@@ -128,11 +128,11 @@ public class ThingServiceImpl implements IThingService {
             count = thingDao.insert(thing);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceException("新增小记失败", EventCode.NT_CREATE_EXCEPTION);
+            throw new ServiceException("新增小记失败", EventCode.INSERT_EXCEPTION);
         }
 
         if (count != 1) {
-            throw new ServiceRollbackException("新增小记失败", EventCode.NT_CREATE_FAILED);
+            throw new ServiceRollbackException("新增小记失败", EventCode.INSERT_ERROR);
         }
 
 //        新增小记的日志
@@ -221,13 +221,11 @@ public class ThingServiceImpl implements IThingService {
     public void topThing(boolean isTop, int thingId, int userId) throws ServiceException {
         String desc = "置顶小记"; // 事件描述
         String eventSuccess = EventCode.NT_TOP_SUCCESS; // 事件代码
-        String eventFailed = EventCode.NT_TOP_FAILED; // 事件代码
         int beforeTop = 0; // 修改之前的 top 字段值
         int afterTop = 1; // 修改之后的 top 字段值
         if (!isTop) {
             desc = "取消置顶小记";
             eventSuccess = EventCode.NT_CANCEL_TOP_SUCCESS;
-            eventFailed = EventCode.NT_CANCEL_TOP_FAILED;
             beforeTop = 1;
             afterTop = 0;
         }
@@ -252,7 +250,7 @@ public class ThingServiceImpl implements IThingService {
         }
 
         if (count != 1) {
-            throw new ServiceRollbackException(desc + "服务异常", eventFailed);
+            throw new ServiceRollbackException(desc + "服务异常", EventCode.UPDATE_ERROR);
         }
 
         Date localTime = new Date(); // 时间

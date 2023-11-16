@@ -66,16 +66,16 @@ public class EventCode {
     public static final String REDIS_SERVE_ERROR = "R_001"; // redis 服务错误
 
 //    ===== 笔记、小记业务状态码 =====
-    public static final String NT_TOP_SUCCESS = "T_001"; // 置顶笔记、小记成功
-    public static final String NT_TOP_FAILED = "T_002"; // 置顶笔记、小记失败
-    public static final String NT_CANCEL_TOP_SUCCESS = "T_003"; // 置顶笔记、小记失败
-    public static final String NT_CANCEL_TOP_FAILED = "T_004"; // 置顶笔记、小记失败
-    public static final String NT_DELETE_SUCCESS = "T_005"; // 删除笔记、小记成功
-    public static final String NT_COMPLETE_DELETE_SUCCESS = "T_006"; // 彻底删除笔记、小记成功
-    public static final String NT_CREATE_SUCCESS = "T_007"; // 创建笔记、小记成功
-    public static final String NT_CREATE_EXCEPTION = "T_008"; // 创建笔记、小记异常
-    public static final String NT_CREATE_FAILED = "T_009"; // 创建笔记、小记失败
-    public static final String NT_UPDATE_SUCCESS = "T_010"; // 修改笔记、小记成功
+    public static final String NT_TOP_SUCCESS = "NT_001"; // 置顶笔记、小记成功
+//    public static final String NT_TOP_FAILED = "NT_002"; // 置顶笔记、小记失败
+    public static final String NT_CANCEL_TOP_SUCCESS = "NT_003"; // 置顶笔记、小记失败
+//    public static final String NT_CANCEL_TOP_FAILED = "NT_004"; // 取消置顶笔记、小记失败
+    public static final String NT_DELETE_SUCCESS = "NT_005"; // 删除笔记、小记成功
+    public static final String NT_COMPLETE_DELETE_SUCCESS = "NT_006"; // 彻底删除笔记、小记成功
+    public static final String NT_CREATE_SUCCESS = "NT_007"; // 创建笔记、小记成功
+//    public static final String NT_CREATE_EXCEPTION = "NT_008"; // 创建笔记、小记异常
+//    public static final String NT_CREATE_FAILED = "NT_009"; // 创建笔记、小记失败
+    public static final String NT_UPDATE_SUCCESS = "NT_010"; // 修改笔记、小记成功
 
 //    ===== 日志业务状态码 =====
     public static final String LOG_CREATE_EXCEPTION = "LOG_001"; // 日志新增异常

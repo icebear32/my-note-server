@@ -11,10 +11,7 @@ import com.ich.note.util.response.ResponseData;
 import com.ich.note.util.validate.TokenValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,8 +30,39 @@ public class NoteController {
     private StringRedisTemplate redisTemplate; // redis 对象
 
     /**
+     * 删除笔记（彻底删除笔记）
+     * 请求地址：http://127.0.0.1:18081/note/delete
+     * 请求方式：DELETE
+     *
+     * @param complete 是否为彻底删除
+     * @param noteId 笔记编号
+     * @param isRecycleBin 是否为回收站操作
+     * @param userToken redis key，登录用户的信息
+     * @return 响应数据
+     */
+    @DeleteMapping("/delete")
+    public ResponseData deleteNote(boolean complete, int noteId, boolean isRecycleBin, @RequestHeader String userToken) {
+        try {
+//            判断登录参数
+            User user =  TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            验证彻底删除参数
+            if (Validator.isEmpty(complete)) return new ResponseData(false, "删除参数有误", EventCode.PARAM_DELETE_COMPLETE_WRONG);
+//            验证回收站参数
+            if (Validator.isEmpty(isRecycleBin)) return new ResponseData(false, "删除参数有误", EventCode.PARAM_DELETE_RECYCLE_WRONG);
+//            验证笔记编号参数
+            if (Validator.isEmpty(noteId)) return new ResponseData(false, "笔记编号参数有误", EventCode.PARAM_ID_WRONG);
+//            调用删除笔记业务
+            noteService.deleteNoteById(complete, noteId, user.getId(), isRecycleBin);
+            return new ResponseData(true, complete ? "彻底删除成功" : "删除成功", EventCode.UPDATE_SUCCESS);
+        }catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
+
+    /**
      * 置顶笔记（取消置顶笔记）
-     * 请求地址：http://127.0.0.1:18081s/note/top
+     * 请求地址：http://127.0.0.1:18081/note/top
      * 请求方式：GET
      *
      * @param isTop 是否为置顶

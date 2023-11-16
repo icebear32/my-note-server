@@ -23,7 +23,7 @@ import java.util.List;
  * @Author: ich
  */
 @RestController
-@RequestMapping("/thing") // 请求地址：http://127.0.0.1:18081s/thing
+@RequestMapping("/thing") // 请求地址：http://127.0.0.1:18081/thing
 public class ThingController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class ThingController {
 
     /**
      * 修改小记
-     * 请求地址：http://127.0.0.1:18081s/thing/update
+     * 请求地址：http://127.0.0.1:18081/thing/update
      * 请求方式：POST
      *
      * @param thingId 编号
@@ -94,7 +94,7 @@ public class ThingController {
 
     /**
      * 获取编辑的小记信息
-     * 请求地址：http://127.0.0.1:18081s/thing/edit
+     * 请求地址：http://127.0.0.1:18081/thing/edit
      * 请求方式：GET
      *
      * @param thingId 小记编号
@@ -119,7 +119,7 @@ public class ThingController {
 
     /**
      * 新增小记
-     * 请求地址：http://127.0.0.1:18081s/thing/create
+     * 请求地址：http://127.0.0.1:18081/thing/create
      * 请求方式：POST
      *
      * @param title 标题
@@ -176,7 +176,7 @@ public class ThingController {
 
     /**
      * 删除小记（彻底删除小记）
-     * 请求地址：http://127.0.0.1:18081s/thing/delete
+     * 请求地址：http://127.0.0.1:18081/thing/delete
      * 请求方式：DELETE
      *
      * @param complete 是否为彻底删除
@@ -207,7 +207,7 @@ public class ThingController {
 
     /**
      * 置顶小记（取消置顶小记）
-     * 请求地址：http://127.0.0.1:18081s/thing/top
+     * 请求地址：http://127.0.0.1:18081/thing/top
      * 请求方式：GET
      *
      * @param isTop 是否为置顶
@@ -236,7 +236,7 @@ public class ThingController {
 
     /**
      * 获取用户的小记列表
-     * 请求地址：http://127.0.0.1:18081s/thing/list
+     * 请求地址：http://127.0.0.1:18081/thing/list
      * 请求方式：GET
      *
      * @param search 查询关键词（标题含有，或者，标签含有）

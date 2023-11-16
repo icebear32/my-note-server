@@ -9,6 +9,17 @@ import java.util.List;
 public interface INoteService {
 
     /**
+     * 根据编号删除笔记（彻底删除）
+     *
+     * @param complete 是否彻底删除
+     * @param noteId 笔记编号
+     * @param userId 用户编号
+     * @param isRecycleBin 是否是回收站的操作
+     * @throws ServiceException 业务异常
+     */
+    void deleteNoteById(boolean complete, int noteId, int userId, boolean isRecycleBin) throws ServiceException;
+
+    /**
      * 置顶笔记（取消置顶笔记）
      * @param isTop 是否置顶笔记
      * @param NoteId 笔记编号
