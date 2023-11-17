@@ -31,6 +31,50 @@ public class INoteServiceImpl implements INoteService {
     private INoteThingLogService noteThingLogService; // 笔记小记的业务接口
 
     /**
+     * 创建笔记（并且初始化笔记）
+     * @param userId
+     * @return userId 用户编号
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public int createNoteInit(int userId) throws ServiceException {
+
+        Date localTime = new Date(); // 时间
+
+//        新增笔记的对象
+        Note note = Note.builder()
+                .time(localTime)
+                .updateTime(localTime)
+                .userId(userId)
+                .build();
+
+        int count = 0;
+        try {
+            count = noteDao.insert(note);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("新建笔记失败", EventCode.INSERT_EXCEPTION);
+        }
+
+        if (count != 1) throw new ServiceRollbackException("新建笔记失败", EventCode.INSERT_ERROR);
+
+//        新增笔记的日志对象
+        NoteThingLog log = NoteThingLog.builder()
+                .noteId(note.getId())
+                .time(localTime)
+                .event(EventCode.NT_CREATE_SUCCESS)
+                .desc("新增笔记")
+                .userId(userId)
+                .build();
+
+//        新增笔记日志
+        noteThingLogService.addOneLog(log, true);
+
+//        返回新增笔记的编号
+        return note.getId();
+    }
+
+    /**
      * 根据编号删除笔记（彻底删除）
      *
      * @param complete 是否彻底删除

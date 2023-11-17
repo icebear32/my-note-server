@@ -30,6 +30,28 @@ public class NoteController {
     private StringRedisTemplate redisTemplate; // redis 对象
 
     /**
+     * 新增笔记
+     * 请求地址：http://127.0.0.1:18081/note/create
+     * 请求方式：PUT
+     *
+     * @param userToken redis key，登录用户的信息
+     * @return 响应数据
+     */
+    @DeleteMapping("/create")
+    public ResponseData createNote(@RequestHeader String userToken) {
+        try {
+//            判断登录参数
+            User user =  TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            调用删除笔记业务
+            int noteId = noteService.createNoteInit(user.getId());
+            return new ResponseData(true,"创建成功", EventCode.NT_CREATE_SUCCESS, noteId);
+        }catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
+
+    /**
      * 删除笔记（彻底删除笔记）
      * 请求地址：http://127.0.0.1:18081/note/delete
      * 请求方式：DELETE

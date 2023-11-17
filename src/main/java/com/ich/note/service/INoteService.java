@@ -2,11 +2,20 @@ package com.ich.note.service;
 
 import com.ich.note.exception.ServiceException;
 import com.ich.note.pojo.Note;
+import com.ich.note.pojo.Thing;
 
 import java.util.List;
 
 // 关于笔记的业务接口
 public interface INoteService {
+
+    /**
+     * 创建笔记（并且初始化笔记）
+     * @param userId
+     * @return userId 用户编号
+     * @throws ServiceException 业务异常
+     */
+    int createNoteInit(int userId) throws ServiceException;
 
     /**
      * 根据编号删除笔记（彻底删除）
