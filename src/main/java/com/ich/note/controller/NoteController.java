@@ -37,7 +37,7 @@ public class NoteController {
      * @param userToken redis key，登录用户的信息
      * @return 响应数据
      */
-    @DeleteMapping("/create")
+    @PutMapping("/create")
     public ResponseData createNote(@RequestHeader String userToken) {
         try {
 //            判断登录参数
