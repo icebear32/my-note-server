@@ -10,6 +10,16 @@ import java.util.List;
 public interface INoteService {
 
     /**
+     * 获取编辑的笔记信息
+     *
+     * @param noteId 笔记编号
+     * @param userId 用户编号
+     * @return 小记对象
+     * @throws ServiceException 业务异常
+     */
+    Note getEditNote(int noteId, int userId) throws ServiceException;
+
+    /**
      * 创建笔记（并且初始化笔记）
      * @param userId
      * @return userId 用户编号

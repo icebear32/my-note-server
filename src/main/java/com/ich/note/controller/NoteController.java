@@ -30,6 +30,31 @@ public class NoteController {
     private StringRedisTemplate redisTemplate; // redis 对象
 
     /**
+     * 获取编辑的笔记信息
+     * 请求地址：http://127.0.0.1:18081/note/edit
+     * 请求方式：GET
+     *
+     * @param noteId 笔记编号
+     * @param userToken redis key，登录用户的信息
+     * @return 响应数据，笔记对象
+     */
+    @GetMapping("/edit")
+    public ResponseData getUserEditNote(int noteId, @RequestHeader String userToken) {
+        try {
+//            判断登录参数
+            User user = TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            验证笔记编号参数
+            if (Validator.isEmpty(noteId)) return new ResponseData(false, "笔记编号参数有误", EventCode.PARAM_ID_WRONG);
+//            调用获取编辑笔记业务
+            Note editNote = noteService.getEditNote(noteId, user.getId());
+            return new ResponseData(true, "获取成功", EventCode.SELECT_SUCCESS, editNote);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
+
+    /**
      * 新增笔记
      * 请求地址：http://127.0.0.1:18081/note/create
      * 请求方式：PUT

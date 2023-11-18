@@ -31,6 +31,37 @@ public class INoteServiceImpl implements INoteService {
     private INoteThingLogService noteThingLogService; // 笔记小记的业务接口
 
     /**
+     * 获取编辑的笔记信息
+     *
+     * @param noteId 笔记编号
+     * @param userId 用户编号
+     * @return 小记对象
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public Note getEditNote(int noteId, int userId) throws ServiceException {
+
+        QueryWrapper wrapper = QueryWrapper.create()
+                .select(NOTE.UPDATE_TIME, NOTE.TITLE, NOTE.CONTENT)
+                .where(NOTE.STATUS.eq(1))
+                .and(NOTE.ID.eq(noteId))
+                .and(NOTE.USER_ID.eq(userId));
+
+        Note note = null;
+        try {
+            note = noteDao.selectOneByQuery(wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("笔记获取失败，请稍后再试", EventCode.SELECT_EXCEPTION);
+        }
+
+        if (note == null) throw new ServiceException("笔记不存在，请稍后再试", EventCode.SELECT_NONE);
+
+//        将笔记返回出去
+        return note;
+    }
+
+    /**
      * 创建笔记（并且初始化笔记）
      * @param userId
      * @return userId 用户编号
