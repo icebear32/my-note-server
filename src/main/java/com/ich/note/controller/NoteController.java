@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +29,34 @@ public class NoteController {
     private INoteService noteService; // 笔记的业务接口
     @Autowired
     private StringRedisTemplate redisTemplate; // redis 对象
+
+    /**
+     * 保存笔记
+     * 请求地址： http://127.0.0.1:18081/note/save
+     * 请求方式：POST
+     *
+     * @param noteId 笔记编号
+     * @param title 笔记标题
+     * @param body 笔记内容
+     * @param content 笔记内容（完整，包括 title 和 body）
+     * @param userToken redis key，登录用户的信息
+     * @return
+     */
+    @PostMapping("/save")
+    public ResponseData saveNote(int noteId, String title, String body, String content, @RequestHeader String userToken) {
+        try {
+//            判断登录参数
+            User user = TokenValidateUtil.validateUserToken(userToken, redisTemplate);
+//            验证笔记编号参数
+            if (Validator.isEmpty(noteId)) return new ResponseData(false, "编号参数有误", EventCode.PARAM_ID_WRONG);
+//            调用保存笔记业务
+            Date time = noteService.saveEditingNote(noteId, user.getId(), title, body, content);
+            return new ResponseData(true, "保存成功", EventCode.UPDATE_SUCCESS, time);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            return new ResponseData(false, e.getMessage(), e.getCode());
+        }
+    }
 
     /**
      * 获取编辑的笔记信息

@@ -31,6 +31,61 @@ public class INoteServiceImpl implements INoteService {
     private INoteThingLogService noteThingLogService; // 笔记小记的业务接口
 
     /**
+     * 保存正在编辑的笔记
+     *
+     * @param noteId 笔记编号
+     * @param userId 用户编号
+     * @param title 笔记标题
+     * @param body 笔记内容
+     * @param content 笔记内容（完整，包括 title 和 body）
+     * @return
+     * @throws ServiceException 业务异常
+     */
+    @Override
+    public Date saveEditingNote(int noteId, int userId, String title, String body, String content) throws ServiceException {
+
+        QueryWrapper wrapper = QueryWrapper.create()
+                .where(NOTE.ID.eq(noteId))
+                .and(NOTE.USER_ID.eq(userId))
+                .and(NOTE.STATUS.eq(1));
+
+        Date localTime = new Date(); // 时间
+
+//        修改的字段（标题。内容，完整内容，最后一次操作时间）
+        Note note = Note.builder()
+                .title(title)
+                .body(body)
+                .content(content)
+                .updateTime(localTime)
+                .build();
+
+        int count = 0;
+        try {
+             count = noteDao.updateByQuery(note, wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException("保存失败", EventCode.UPDATE_EXCEPTION);
+        }
+
+        if (count != 1) {
+            throw new ServiceRollbackException("保存失败", EventCode.UPDATE_ERROR);
+        }
+
+//        添加保存笔记的日志
+        NoteThingLog log = NoteThingLog.builder()
+                .userId(userId)
+                .desc("保存笔记")
+                .event(EventCode.NT_UPDATE_SUCCESS)
+                .time(localTime)
+                .noteId(noteId)
+                .build();
+
+        noteThingLogService.addOneLog(log, true);
+
+        return localTime;
+    }
+
+    /**
      * 获取编辑的笔记信息
      *
      * @param noteId 笔记编号

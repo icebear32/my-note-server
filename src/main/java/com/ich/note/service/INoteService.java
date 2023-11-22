@@ -2,12 +2,25 @@ package com.ich.note.service;
 
 import com.ich.note.exception.ServiceException;
 import com.ich.note.pojo.Note;
-import com.ich.note.pojo.Thing;
 
+import java.util.Date;
 import java.util.List;
 
 // 关于笔记的业务接口
 public interface INoteService {
+
+    /**
+     * 保存正在编辑的笔记
+     *
+     * @param noteId 笔记编号
+     * @param userId 用户编号
+     * @param title 笔记标题
+     * @param body 笔记内容
+     * @param content 笔记内容（完整，包括 title 和 body）
+     * @return
+     * @throws ServiceException 业务异常
+     */
+    Date saveEditingNote(int noteId, int userId, String title, String body, String content) throws ServiceException;
 
     /**
      * 获取编辑的笔记信息
