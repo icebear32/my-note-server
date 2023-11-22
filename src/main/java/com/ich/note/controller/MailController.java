@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @className: MailController
+ * @Description: 关于邮箱的控制层
+ * @Author: ich
+ */
 @RestController
 @RequestMapping("/mail") // 请求地址：http://127.0.0.1:18081/mail
 public class MailController {
