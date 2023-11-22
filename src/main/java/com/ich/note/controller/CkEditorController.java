@@ -1,6 +1,5 @@
 package com.ich.note.controller;
 
-import com.ich.note.util.response.ResponseData;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,8 +30,8 @@ public class CkEditorController {
      */
     @PostMapping("/upload/pic")
     public HashMap<String, Object> uploadPic(@RequestParam("upload")MultipartFile file, HttpServletRequest request){
-        HashMap<String, Object> responseData = new HashMap<>(); // 响应数据
-        HashMap<String, String> responseDataInfo = new HashMap<>(); // 响应数据
+        HashMap<String, Object> responseData = new HashMap<>(); // 响应数据的一层数据
+        HashMap<String, String> responseDataInfo = new HashMap<>(); // 响应数据的二层数据
 
 //        判断是否有上传的文件
         if (file.isEmpty()) {
@@ -42,7 +41,8 @@ public class CkEditorController {
         }
 
 //        上传到哪个磁盘文件夹下
-        String fileMkdirsPath = "E:" + File.separator + "ich-file" + File.separator + "image";
+//        D:\document\Vue\code\ich-file\image
+        String fileMkdirsPath = "D:" + File.separator + "document" + File.separator + "Vue" + File.separator + "code" + File.separator + "ich-file" + File.separator + "image";
 //        上传到哪个磁盘文件下的虚拟路径地址
         String urlImagePath  =
                 request.getScheme() +
@@ -69,10 +69,10 @@ public class CkEditorController {
 //        判断上传到的文件夹是否存在
         File temp = new File(fileMkdirsPath);
 //        不存在时则创建
-        if (!temp.exists()) temp.mkdir();
+        if (!temp.exists()) temp.mkdirs();
 
 //        最终上传的文件对象
-        File localFile = new File(fileMkdirsPath + fileName);
+        File localFile = new File(fileMkdirsPath + File.separator + fileName);
         try {
 //            上传文件
             file.transferTo(localFile);
